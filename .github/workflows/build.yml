@@ -1,5 +1,4 @@
 name: Build and deploy to Kuroco front
-
 on:
   push:
     branches:
@@ -7,9 +6,6 @@ on:
   issue_comment:
     types: [created, edited]
   workflow_dispatch:
-
-env:
-  BRANCH: main
 
 concurrency:
   group: ${{ github.workflow }}-${{ github.ref }}
@@ -19,13 +15,13 @@ jobs:
   # for Pull Request (exclude merged)
   pullreq_build:
     name: Build(pullreq)
-    if: (github.repository == 'diverta/front_nuxt_corporate' && github.event_name == 'issue_comment' && startsWith(github.event.comment.body, '/kuroco stage') && github.event.issue.pull_request != null)
+    if: (github.repository == 'shota-mother/kuroco_front_nuxt_corporate_mother' && github.event_name == 'issue_comment' && startsWith(github.event.comment.body, '/kuroco stage') && github.event.issue.pull_request != null)
     runs-on: ubuntu-latest
     steps:
       - name: "Get branch name and sha"
         id: get_branch
         run: |
-          PR=$(curl -H "X-Kuroco-Auth: token abd1c816e196edb0c626d44ccff524f5" https://dev-nuxt-corporate.g.kuroco.app/direct/menu/github/?pr=${{ github.event.issue.pull_request.url }})
+          PR=$(curl -H "X-Kuroco-Auth: token 0909e090e3a7b6ccb3742a21b50ac73e" https://corp-test.g.kuroco.app/direct/menu/github/?pr=${{ github.event.issue.pull_request.url }})
           echo "branch=$(echo $PR | jq -r '.ref')" >> $GITHUB_OUTPUT
           echo "sha=$(echo $PR | jq -r '.sha')" >> $GITHUB_OUTPUT
       - name: Checkout Repo
@@ -63,14 +59,14 @@ jobs:
       - name: Webhook
         uses: diverta/workflow-webhook@v2
         env:
-          webhook_url: "https://dev-nuxt-corporate.g.kuroco.app/direct/menu/github/"
-          webhook_secret: "abd1c816e196edb0c626d44ccff524f5"
-          data: '{"single_zip":"1","domain":"dev-nuxt-corporate.g.kuroco-front.app","pr":"${{ github.event.issue.pull_request.url }}",  "repository":"${{ github.repository }}", "run_id":"${{ github.run_id }}", "hash":"${{ steps.get_branch.outputs.sha }}"}'
+          webhook_url: "https://corp-test.g.kuroco.app/direct/menu/github/"
+          webhook_secret: "0909e090e3a7b6ccb3742a21b50ac73e"
+          data: '{"single_zip":"1","domain":"corp-test.g.kuroco-front.app","pr":"${{ github.event.issue.pull_request.url }}",  "repository":"${{ github.repository }}", "run_id":"${{ github.run_id }}", "hash":"${{ steps.get_branch.outputs.sha }}"}'
           
   #for Push
   pushed_build:
     name: Build(pushed)
-    if: (github.repository == 'diverta/front_nuxt_corporate' && (github.event_name == 'push' || github.event_name == 'workflow_dispatch'))
+    if: (github.repository == 'shota-mother/kuroco_front_nuxt_corporate_mother' && (github.event_name == 'push' || github.event_name == 'workflow_dispatch'))
     runs-on: ubuntu-latest
     steps:
       - name: Checkout Repo
@@ -104,6 +100,6 @@ jobs:
       - name: Webhook
         uses: diverta/workflow-webhook@v2
         env:
-          webhook_url: "https://dev-nuxt-corporate.g.kuroco.app/direct/menu/github/"
-          webhook_secret: "abd1c816e196edb0c626d44ccff524f5"
-          data: '{"single_zip":"1","domain":"dev-nuxt-corporate.g.kuroco-front.app", "repository":"${{ github.repository }}", "run_id":"${{ github.run_id }}", "hash":"${{ github.sha }}"}'
+          webhook_url: "https://corp-test.g.kuroco.app/direct/menu/github/"
+          webhook_secret: "0909e090e3a7b6ccb3742a21b50ac73e"
+          data: '{"single_zip":"1","domain":"corp-test.g.kuroco-front.app", "repository":"${{ github.repository }}", "run_id":"${{ github.run_id }}", "hash":"${{ github.sha }}"}'
