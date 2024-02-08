@@ -4,7 +4,7 @@
       <div class="c-hero__body">
         <p class="c-hero__body__lead">We Enjoy Technology</p>
         <p class="c-hero__body__text">
-          すべての開発者が自由な開発に取り組める世界の実現へ
+          TESTMOTHERすべての開発者が自由な開発に取り組める世界の実現へ
         </p>
       </div>
       <img src="~/assets/image/top-hero.png" alt="hero" class="c-hero__image" />
